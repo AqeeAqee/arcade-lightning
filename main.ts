@@ -128,8 +128,8 @@ game.onUpdate(() => {
 })
 
 let msLast=0
-const durationBase=15
-let duration = 0,duration2=0
+const maxDurationBase=15
+let duration=0
 const amplitude:number=undefined
 game.onPaint(() => {
     // controller.pauseUntilAnyButtonIsPressed()
@@ -137,15 +137,15 @@ game.onPaint(() => {
     if(!controller.A.isPressed()){
         addBranch = true
 
-        if (control.millis() - msLast > duration2) {
+        if (control.millis() - msLast > duration) {
             bg.fill(0)
             msLast = control.millis()
-            duration2 = Math.randomRange(5, durationBase) ** 3>>2
+            duration = Math.randomRange(5, maxDurationBase) ** 3>>3
 
             // bg.drawLine( control.benchmark(()=>{
                 genRecursive(80, 22, mySprite.x, mySprite.y, 1, amplitude>>2)
             // })>>6,0,0,0,1)
-        }else if (control.millis() - msLast > (duration2>>2)) {
+        }else if (control.millis() - msLast > (duration>>2)) {
             bg.fill(0)
         }
     }else{
