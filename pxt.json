@@ -6,12 +6,12 @@
     },
     "files": [
         "README.md",
-        "lightning.ts",
-        "tilemap.g.jres",
-        "tilemap.g.ts"
+        "lightning.ts"
     ],
     "testFiles": [
-        "main.ts"
+        "main.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "targetVersions": {
         "target": "1.12.39",

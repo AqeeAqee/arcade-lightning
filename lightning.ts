@@ -83,7 +83,7 @@ namespace lightning_effect {
                 this.length=undefined
                 this.genRecursive(this.x1, this.y1, this.x2, this.y2, this.color, this.amplitude)
                 this.lastGen = control.millis()
-            }else if (this.addBranch && control.millis() - this.lastGen > (this.updateInterval>>2)) {
+            }else if (control.millis() - this.lastGen > Math.max(10,this.updateInterval>>2)) {
                 this.lines = []
             }
 

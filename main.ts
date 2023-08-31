@@ -25,9 +25,10 @@ controller.moveSprite(mySprite)
 mySprite.setPosition(140,110)
 scene.cameraFollowSprite(mySprite)
 
-const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 2, true)
-lightning.targetFollow = mySprite
-lightning.updateInterval=20
+// const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 2, true)
+// lightning.targetFollow = mySprite
+// lightning.updateInterval=20
+
 
 const sparks:lightning_effect.lightning[]=[]
 
@@ -54,14 +55,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     ball.setFlag(SpriteFlag.AutoDestroy, false)
     ball.setFlag(SpriteFlag.DestroyOnWall, false)
 
-    const spark = new lightning_effect.lightning(-1, 22, 11, mySprite.x, mySprite.y, 1, false, 8)
+    const spark = new lightning_effect.lightning(-1, 22, 11, mySprite.x, mySprite.y, 1, false)
     spark.targetFollow = mySprite
     spark.sourceFollow = ball
     spark.updateInterval = 20
     sparks.push(spark)
-    spark.onRequestColor(()=>{
-        return Math.randomRange(2,10)
-    })
+    spark.onRequestColor(()=>{return Math.pickRandom([1,3,10,15])})
 })
 
 controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
