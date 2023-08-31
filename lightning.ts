@@ -26,6 +26,7 @@ namespace lightning_effect {
         public sourceFollow: position
         public targetFollow: position
         public handlerOnGetColor: () => number
+        public lifespan:number
 
         public constructor(
             z: number,
@@ -66,6 +67,18 @@ namespace lightning_effect {
         }
 
         __update(camera: scene.Camera, dt: number) {
+            if (this.lifespan) {
+                this.lifespan -= dt*1000
+                if (this.lifespan <= 0) {
+                    this.destory()
+                    this.lifespan=undefined
+                    this.lines = []
+                    return
+                }
+            }
+
+            // console.log([this.id, this.lifespan].join())
+            
             if (this.sourceFollow) {
                 this.x1 = this.sourceFollow.x
                 this.y1 = this.sourceFollow.y

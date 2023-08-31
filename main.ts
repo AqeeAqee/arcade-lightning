@@ -59,6 +59,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     spark.targetFollow = mySprite
     spark.sourceFollow = ball
     spark.updateInterval = 20
+    spark.lifespan=2000
     sparks.push(spark)
     spark.onRequestColor(()=>{return Math.pickRandom([1,3,10,15])})
 })
