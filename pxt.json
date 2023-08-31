@@ -6,13 +6,15 @@
     },
     "files": [
         "README.md",
-        "lightning.ts"
+        "lightning.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "main.ts"
     ],
     "targetVersions": {
-        "target": "1.12.37",
+        "target": "1.12.39",
         "targetId": "arcade"
     },
     "supportedTargets": [

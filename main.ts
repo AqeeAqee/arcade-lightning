@@ -1,6 +1,7 @@
 
 game.stats = true
-const bg = scene.backgroundImage()
+scene.setBackgroundImage(storySprites.castle)
+tiles.setCurrentTilemap(tilemap`level1`)
 
 let mySprite = sprites.create(img`
     . . . . . . f f f f . . . . . .
@@ -22,14 +23,13 @@ let mySprite = sprites.create(img`
 `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 mySprite.setPosition(140,110)
+scene.cameraFollowSprite(mySprite)
 
-
-
-const lightning = new lightning_effect.lightning(-1, 80, 22, mySprite.x, mySprite.y, 1, true)
+const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 2, true)
 lightning.targetFollow = mySprite
+lightning.updateInterval=20
 
 const sparks:lightning_effect.lightning[]=[]
-
 
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     let ball = sprites.createProjectileFromSprite(img`
@@ -51,12 +51,17 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     . . . . . b b b b b b . . . . .
 `, mySprite, 50, 50)
     ball.setBounceOnWall(true)
+    ball.setFlag(SpriteFlag.AutoDestroy, false)
+    ball.setFlag(SpriteFlag.DestroyOnWall, false)
 
     const spark = new lightning_effect.lightning(-1, 22, 11, mySprite.x, mySprite.y, 1, false, 8)
     spark.targetFollow = mySprite
     spark.sourceFollow = ball
     spark.updateInterval = 20
     sparks.push(spark)
+    spark.onRequestColor(()=>{
+        return Math.randomRange(2,10)
+    })
 })
 
 controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
@@ -67,5 +72,8 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
     }
 })
 
-controller.A.setPressed(true)
-controller.A.setPressed(false)
+for (let i = 0; i < 10; i++) {
+    controller.A.setPressed(true)
+    controller.A.setPressed(false)
+    pause(200)
+}
