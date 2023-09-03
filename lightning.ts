@@ -98,7 +98,8 @@ namespace lightning_effect {
                 this.length=undefined
                 this.genRecursive(this.x1, this.y1, this.x2, this.y2, this.color, this.amplitude)
                 this.lastGen = control.millis()
-                this.updateInterval = 50 * (this.lines.length) ** 2 / this.length
+                // this.updateInterval = 50 * (this.lines.length) ** 2 / this.length
+                this.updateInterval= (this.lines.length<<1)+70
                 info.setScore(this.updateInterval)
             }else if (control.millis() - this.lastGen > this.updateInterval>>2) {
                 this.lines=[]
@@ -130,7 +131,7 @@ namespace lightning_effect {
             if (amplitude <= 1)
                 this.lines.push({ x1, y1, x2, y2, color })
             else {
-                const range = amplitude/2 + minAmplitude
+                let range = amplitude/2 + minAmplitude
                 let x0 = ((x2 + x1) >> 1) + Math.randomRange(-range, range)
                 let y0 = ((y2 + y1) >> 1) + Math.randomRange(-range, range)
 
@@ -147,10 +148,11 @@ namespace lightning_effect {
                         //     this.genRecursive(x1, y1, x0 - dist, y0, color)
                         // if (b2)
                         //     this.genRecursive(x1, y1, x0 + dist, y0, color)
+                        range >>= 1
                         if (b1)
-                            this.genRecursive(x0, y0, x0 - distX + Math.randomRange(-range, range), (y0+this.y2)/2 + Math.randomRange(-range, range), color)
+                            this.genRecursive(x0, y0, (x0 + this.x2) / 2 - distX + Math.randomRange(-range, range), (y0+this.y2)/2 + Math.randomRange(-range, range), color)
                         if (b2)
-                            this.genRecursive(x0, y0, x0 + distX + Math.randomRange(-range, range), (y0 + this.y2) / 2+ Math.randomRange(-range, range), color)
+                            this.genRecursive(x0, y0, (x0 + this.x2) / 2 + distX + Math.randomRange(-range, range), (y0 + this.y2) / 2+ Math.randomRange(-range, range), color)
                     }
                 }
                 amplitude >>= 1

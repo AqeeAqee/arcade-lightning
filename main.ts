@@ -25,10 +25,10 @@ controller.moveSprite(mySprite)
 mySprite.setPosition(140,110)
 // scene.cameraFollowSprite(mySprite)
 
-const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 1, true)
+const lightning = new lightning_effect.lightning(-1, 80, -8, mySprite.x, mySprite.y, 1, true)
 lightning.targetFollow = mySprite
 lightning.updateInterval=222
-lightning.lifespan=500
+lightning.lifespan=50000
 
 const sparks:lightning_effect.lightning[]=[]
 
@@ -85,7 +85,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
 })
 
 controller.B.onEvent(ControllerButtonEvent.Released, function () {
-    lightning.lifespan = 0
+    // lightning.lifespan = 0
 
 })
 
