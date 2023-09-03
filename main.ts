@@ -28,6 +28,7 @@ mySprite.setPosition(140,110)
 const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 1, true)
 lightning.targetFollow = mySprite
 lightning.updateInterval=222
+lightning.lifespan=500
 
 const sparks:lightning_effect.lightning[]=[]
 
@@ -36,7 +37,6 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Projectile, function(s1: Spr
     s1.vy = -s1.vy
     s2.vx = -s2.vx
     s2.vy = -s2.vy
-
 })
 
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -80,6 +80,13 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
     if(spark){
         (spark.sourceFollow as Sprite).destroy()
     }
+
+    lightning.lifespan = 30000
+})
+
+controller.B.onEvent(ControllerButtonEvent.Released, function () {
+    lightning.lifespan = 0
+
 })
 
 for (let i = 0; i < 0; i++) {

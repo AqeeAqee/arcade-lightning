@@ -60,6 +60,10 @@ namespace lightning_effect {
         }
 
         __drawCore(camera: scene.Camera) {
+            if (this.lifespan <= 0) {
+                this.lines = []
+                return
+            }
             const ox = camera.drawOffsetX;
             const oy = camera.drawOffsetY;
 
@@ -70,7 +74,8 @@ namespace lightning_effect {
             if (this.lifespan) {
                 this.lifespan -= dt*1000
                 if (this.lifespan <= 0) {
-                    this.destory()
+                    // this.destory()
+                    this.lines = []
                     return
                 }
             }
@@ -93,9 +98,9 @@ namespace lightning_effect {
                 this.length=undefined
                 this.genRecursive(this.x1, this.y1, this.x2, this.y2, this.color, this.amplitude)
                 this.lastGen = control.millis()
-                this.updateInterval = 100 * (this.lines.length) ** 2 / this.length
+                this.updateInterval = 50 * (this.lines.length) ** 2 / this.length
                 info.setScore(this.updateInterval)
-            }else if (control.millis() - this.lastGen > this.updateInterval>>3) {
+            }else if (control.millis() - this.lastGen > this.updateInterval>>2) {
                 this.lines=[]
                 // this.lines.splice(0, this.lines.length)
             }
@@ -136,7 +141,7 @@ namespace lightning_effect {
                     const b1 = Math.percentChance(chanceBranch)
                     const b2 = Math.percentChance(chanceBranch)
                     if(b1||b2){
-                        distX = Math.max(Math.abs(y0 - this.y2)/3,(Math.abs(x0 - this.x2) ) >> 5)
+                        distX = Math.max(Math.abs(y0 - this.y2)/2,(Math.abs(x0 - this.x2) ) >> 4)
                         // const cb = [12, 12, 11, 11, 1, 1, 1, 1][Math.idiv(8 * dist, this.length)]
                         // if (b1)
                         //     this.genRecursive(x1, y1, x0 - dist, y0, color)
