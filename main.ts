@@ -23,14 +23,21 @@ let mySprite = sprites.create(img`
 `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 mySprite.setPosition(140,110)
-scene.cameraFollowSprite(mySprite)
+// scene.cameraFollowSprite(mySprite)
 
-// const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 2, true)
-// lightning.targetFollow = mySprite
-// lightning.updateInterval=20
-
+const lightning = new lightning_effect.lightning(-1, 40, 11, mySprite.x, mySprite.y, 1, true)
+lightning.targetFollow = mySprite
+lightning.updateInterval=222
 
 const sparks:lightning_effect.lightning[]=[]
+
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Projectile, function(s1: Sprite, s2: Sprite) {
+    s1.vx = -s1.vx
+    s1.vy = -s1.vy
+    s2.vx = -s2.vx
+    s2.vy = -s2.vy
+
+})
 
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     let ball = sprites.createProjectileFromSprite(img`
@@ -54,25 +61,28 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     ball.setBounceOnWall(true)
     ball.setFlag(SpriteFlag.AutoDestroy, false)
     ball.setFlag(SpriteFlag.DestroyOnWall, false)
+    // ball.lifespan = 3000
 
     const spark = new lightning_effect.lightning(-1, 22, 11, mySprite.x, mySprite.y, 1, false)
     spark.targetFollow = mySprite
     spark.sourceFollow = ball
     spark.updateInterval = 20
-    spark.lifespan=2000
+    // spark.lifespan=2000
     sparks.push(spark)
     spark.onRequestColor(()=>{return Math.pickRandom([1,3,10,15])})
+    ball.onDestroyed(()=>{
+        spark.destory()
+    })
 })
 
 controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
     const spark= sparks.pop()
     if(spark){
         (spark.sourceFollow as Sprite).destroy()
-        spark.destory()
     }
 })
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 0; i++) {
     controller.A.setPressed(true)
     controller.A.setPressed(false)
     pause(200)

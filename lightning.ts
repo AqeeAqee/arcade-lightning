@@ -15,8 +15,8 @@ namespace lightning_effect {
         y: number
     }
 
-    const minAmplitude = 2
-    const minChanceBranch = 5
+    const minAmplitude = 3
+    const minChanceBranch = 2
 
     export class lightning extends sprites.BaseSprite {
         private length: number
@@ -71,14 +71,10 @@ namespace lightning_effect {
                 this.lifespan -= dt*1000
                 if (this.lifespan <= 0) {
                     this.destory()
-                    this.lifespan=undefined
-                    this.lines = []
                     return
                 }
             }
 
-            // console.log([this.id, this.lifespan].join())
-            
             if (this.sourceFollow) {
                 this.x1 = this.sourceFollow.x
                 this.y1 = this.sourceFollow.y
@@ -88,39 +84,30 @@ namespace lightning_effect {
                 this.y2 = this.targetFollow.y
             }
 
-            if (control.millis() - this.lastGen > this.updateInterval) {
+            if (control.millis() - this.lastGen > this.updateInterval ) {//
                 this.lines = []
+                // this.lines.splice(0, this.lines.length)
                 if (this.handlerOnGetColor)
                     this.color=this.handlerOnGetColor()
 
                 this.length=undefined
                 this.genRecursive(this.x1, this.y1, this.x2, this.y2, this.color, this.amplitude)
                 this.lastGen = control.millis()
-            }else if (control.millis() - this.lastGen > Math.max(10,this.updateInterval>>2)) {
-                this.lines = []
+                this.updateInterval = 100 * (this.lines.length) ** 2 / this.length
+                info.setScore(this.updateInterval)
+            }else if (control.millis() - this.lastGen > this.updateInterval>>3) {
+                this.lines=[]
+                // this.lines.splice(0, this.lines.length)
             }
-
-            /*
-            let msLast = 0
-            const maxDurationBase = 15
-            let duration = 0
-            if (control.millis() - msLast > duration) {
-                bg.fill(0)
-                msLast = control.millis()
-                duration = Math.randomRange(5, maxDurationBase) ** 3 >> 3
-
-                // bg.drawLine( control.benchmark(()=>{
-                genRecursive(80, 22, mySprite.x, mySprite.y, 1, amplitude >> 2)
-                // })>>6,0,0,0,1)
-            } else if (control.millis() - msLast > (duration >> 2)) {
-                bg.fill(0)
-            }
-            */
         }
 
         public destory() {
+            this.sourceFollow=undefined
+            this.targetFollow=undefined
             const scene = game.currentScene();
             scene.allSprites.removeElement(this);
+            this.lifespan = undefined
+            this.lines.splice(0, this.lines.length)
         }
 
         private genRecursive(x1: number, y1: number, x2: number, y2: number, color: number, amplitude?: number) {
@@ -138,23 +125,27 @@ namespace lightning_effect {
             if (amplitude <= 1)
                 this.lines.push({ x1, y1, x2, y2, color })
             else {
-                const range = amplitude + minAmplitude
+                const range = amplitude/2 + minAmplitude
                 let x0 = ((x2 + x1) >> 1) + Math.randomRange(-range, range)
                 let y0 = ((y2 + y1) >> 1) + Math.randomRange(-range, range)
 
                 // add Branch for Lightning
-                let dist: number
+                let distX: number
                 if (this.addBranch) {
-                    const chanceBranch = amplitude + minChanceBranch
+                    const chanceBranch = (amplitude*2+ minChanceBranch)>>2
                     const b1 = Math.percentChance(chanceBranch)
                     const b2 = Math.percentChance(chanceBranch)
                     if(b1||b2){
-                        dist = (Math.abs(x1 - x2) + Math.abs(y1 - y2)) >> 1
+                        distX = Math.max(Math.abs(y0 - this.y2)/3,(Math.abs(x0 - this.x2) ) >> 5)
                         // const cb = [12, 12, 11, 11, 1, 1, 1, 1][Math.idiv(8 * dist, this.length)]
+                        // if (b1)
+                        //     this.genRecursive(x1, y1, x0 - dist, y0, color)
+                        // if (b2)
+                        //     this.genRecursive(x1, y1, x0 + dist, y0, color)
                         if (b1)
-                            this.genRecursive(x1, y1, x0 - dist, y0, color)
+                            this.genRecursive(x0, y0, x0 - distX + Math.randomRange(-range, range), (y0+this.y2)/2 + Math.randomRange(-range, range), color)
                         if (b2)
-                            this.genRecursive(x1, y1, x0 + dist, y0, color)
+                            this.genRecursive(x0, y0, x0 + distX + Math.randomRange(-range, range), (y0 + this.y2) / 2+ Math.randomRange(-range, range), color)
                     }
                 }
                 amplitude >>= 1
