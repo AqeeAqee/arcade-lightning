@@ -100,7 +100,7 @@ namespace lightning_effect {
                 this.lastGen = control.millis()
                 // this.updateInterval = 50 * (this.lines.length) ** 2 / this.length
                 this.updateInterval= (this.lines.length<<1)+70
-                info.setScore(this.updateInterval)
+                // info.setScore(this.updateInterval)
             }else if (control.millis() - this.lastGen > this.updateInterval>>2) {
                 this.lines=[]
                 // this.lines.splice(0, this.lines.length)
